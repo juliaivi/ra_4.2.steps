@@ -1,38 +1,99 @@
 .App {
-  text-align: center;
+  min-width: 300px;
+  max-width: 440px;
+  margin: 40px auto;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.form {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-end;
+}
+
+input {
+  padding: 5px 10px;
+  margin-right: 10px;
+  margin-top: 10px;
+  font-size: 20px;
+  max-width: 160px;
+  border-radius: 5px;
+  border: 1px solid black;
+}
+
+.btn__ok {
+  padding: 5px 10px;
+  font-size: 20px;
+  border-radius: 5px;
+  border: 1px solid black;
+}
+
+/* table {
+  margin-top: 15px;
+}
+
+th {
+  width: 40%;
+  padding: 15px;
+} */
+
+li {
+  list-style-type: none;
+  /* Убираем маркеры */
+}
+
+/* tbody {
+  list-style: none;
+  padding: 0 20px; 
+  border: solid 1px;
+  border-radius: 10px;
+  margin: 0;
+}
+
+td {
+  border-top: 1px solid #161515;
+  text-align: center;
+  /* border-top: 1px dashed rgb(3, 3, 3); */
+  /* border-top: 1px solid #e8edff; */
+/* }  */
+
+.btn {
+  margin-right: 10px;
+  border: none;
+  background: none;
+  font-size: 20px;
+}
+
+.lists__box {
+  padding: 10px;
+  border: 1px solid;
+  border-radius: 14px;
+}
+
+.list__item {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+
+  ;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  font-size: 20px;
+  line-height: 10px;
 }
 
-.App-link {
-  color: #61dafb;
+.list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.item-del, .item-edit {
+  background-color: white;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
 }
