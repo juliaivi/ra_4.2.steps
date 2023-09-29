@@ -1,54 +1,59 @@
-import React, {useState} from "react";
+import React, {useState, useRef} from "react";
 import Form from "./Form";
 import List from "./List";
 import { customAlphabet } from 'nanoid';
 
-function checkForm(form) {
- if (form.date === "" || form.distance === "") {
-    return false;
- }
-
- if (!form.date.match(/^([0]?[1-9]|[1|2][0-9]|[3][0|1])[.]([0]?[1-9]|[1][0-2])[.]([0-9]{4}|[0-9]{2})$/)) {
-    return false;
- }
- return true;
-}
-
 export default function Step() {
     const nanoid = customAlphabet('1234567890abcdef', 10);
 
-    const [form, setForms] = useState({ id: '', date: '', distance: '' })
+    const [form, setForms] = useState({ id: '', date: '', distance: '',  edit: false})
     const [distanceArr, setDistance] = useState([]);
-
+    let editElem = false;
+    // let elDate = null;
+    // let elRef = useRef();
 
     function handlerOK(e) {
         e.preventDefault();
+        let copy = [];
+        let index;
+      
+        if (form.date === "" || form.distance === "") {
+            return false;
+        }
+        let num = form.date.split('-');
+        form.date = `${num[2]}.${num[1]}.${num[0]}`;
 
-        if (checkForm(form)) { //проверка на правильное заполнение формы
-            const existsDate = distanceArr.findIndex((item) => item.date === form.date); // проверяем есть ли такая дата
-            
-            if (existsDate !== -1) {
-                const copy = [...distanceArr];
-                copy[existsDate].distance = Number(copy[existsDate].distance) + Number(form.distance); // сумируем значение если 
-                setDistance(copy); // изменяем (отрисовываем новые показатели)
+        index = distanceArr.findIndex((item) => item.date === form.date); 
+    
+
+        if (index !== -1) { // нашли
+            copy = [...distanceArr];
+            console.log(2)
+            if (!editElem && copy[index].date !== undefined) {
+                copy[index].distance = Number(copy[index].distance) + Number(form.distance);  
             } else {
-                const copy = [...distanceArr, {id: nanoid(), date: form.date, distance: form.distance}];
-                copy.sort((a, b) => {
+                editElem = false;
+                copy[index].distance = form.distance;
+                // copy[index].date = elDate;
+            }
+            
+        } else { // Нет такого (новый добавляем)
+            console.log(3)
+            copy = [...distanceArr, { id: nanoid(), date: form.date, distance: form.distance }] // добавляем
+            // сортируем
+            copy.sort((a, b) => {
                 let num = a.date.split('.');
                 let pastDate = (`${num[2]}-${num[1]}-${num[0]}`);
                 let num2 = b.date.split('.');
                 let currentDate = (`${num2[2]}-${num2[1]}-${num2[0]}`); 
             
-                    return pastDate > currentDate ? 1 : -1;
-                }) // сортировка по датам
+                return pastDate > currentDate ? -1 : 1;
+            })
 
-                setDistance(copy); // изменяем (отрисовываем новые показатели)
-            } 
-            
+         
+        } 
+            setDistance(copy); // изменяем (отрисовываем новые показатели)
             setForms({date: '', distance: ''}); // очищаем форму
-        } else {
-            alert("Ошибка! Вы не правильно указали дату!! Дата должна выглядеть так - 15.05.23");
-        }
     }
 
     function onEvent({target}) {
@@ -60,7 +65,10 @@ export default function Step() {
 
         if (target.classList.contains('btn__edit')) {
             const edit = distanceArr.findIndex((el) => el.id === target.closest('.list__item').dataset.id);
-            setForms({date: distanceArr[edit].date, distance: distanceArr[edit].distance});
+            editElem = true;
+            // elDate = distanceArr[edit].date;
+            setForms({date: distanceArr[edit].date, distance: distanceArr[edit].distance})
+            // setForms({date: elRef.distanceArr[edit].date, distance: distanceArr[edit].distance});
         }
     }
 
@@ -86,10 +94,7 @@ export default function Step() {
             </div> 
             <ul className="lists__box">
                 <List steps={distanceArr} onEvent={onEvent} />
-            </ul>  
-            
-               
-                 
+            </ul>           
         </>
     )
 
