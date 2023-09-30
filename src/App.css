@@ -29,34 +29,10 @@ input {
   border: 1px solid black;
 }
 
-/* table {
-  margin-top: 15px;
-}
-
-th {
-  width: 40%;
-  padding: 15px;
-} */
-
 li {
   list-style-type: none;
   /* Убираем маркеры */
 }
-
-/* tbody {
-  list-style: none;
-  padding: 0 20px; 
-  border: solid 1px;
-  border-radius: 10px;
-  margin: 0;
-}
-
-td {
-  border-top: 1px solid #161515;
-  text-align: center;
-  /* border-top: 1px dashed rgb(3, 3, 3); */
-  /* border-top: 1px solid #e8edff; */
-/* }  */
 
 .btn {
   margin-right: 10px;

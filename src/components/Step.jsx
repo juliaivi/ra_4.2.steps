@@ -1,16 +1,14 @@
-import React, {useState, useRef} from "react";
+import React, {useState} from "react";
 import Form from "./Form";
 import List from "./List";
 import { customAlphabet } from 'nanoid';
+import conversionDate from "./conversionDate";
 
 export default function Step() {
     const nanoid = customAlphabet('1234567890abcdef', 10);
 
-    const [form, setForms] = useState({ id: '', date: '', distance: '',  edit: false})
+    const [form, setForms] = useState({ id: '', date: '', distance: '', edit: 'false'});
     const [distanceArr, setDistance] = useState([]);
-    let editElem = false;
-    // let elDate = null;
-    // let elRef = useRef();
 
     function handlerOK(e) {
         e.preventDefault();
@@ -18,42 +16,32 @@ export default function Step() {
         let index;
       
         if (form.date === "" || form.distance === "") {
-            return false;
-        }
-        let num = form.date.split('-');
-        form.date = `${num[2]}.${num[1]}.${num[0]}`;
-
-        index = distanceArr.findIndex((item) => item.date === form.date); 
+            alert('Все поля должны быть заполены!');
+        } else {
+            let num = form.date.split('-');
+            form.date = `${num[2]}.${num[1]}.${num[0]}`;
     
-
-        if (index !== -1) { // нашли
-            copy = [...distanceArr];
-            console.log(2)
-            if (!editElem && copy[index].date !== undefined) {
-                copy[index].distance = Number(copy[index].distance) + Number(form.distance);  
-            } else {
-                editElem = false;
-                copy[index].distance = form.distance;
-                // copy[index].date = elDate;
-            }
-            
-        } else { // Нет такого (новый добавляем)
-            console.log(3)
-            copy = [...distanceArr, { id: nanoid(), date: form.date, distance: form.distance }] // добавляем
-            // сортируем
-            copy.sort((a, b) => {
-                let num = a.date.split('.');
-                let pastDate = (`${num[2]}-${num[1]}-${num[0]}`);
-                let num2 = b.date.split('.');
-                let currentDate = (`${num2[2]}-${num2[1]}-${num2[0]}`); 
-            
-                return pastDate > currentDate ? -1 : 1;
-            })
-
-         
-        } 
-            setDistance(copy); // изменяем (отрисовываем новые показатели)
-            setForms({date: '', distance: ''}); // очищаем форму
+            index = distanceArr.findIndex((item) => item.date === form.date); 
+    
+            if (index !== -1) { // нашли
+                copy = [...distanceArr];
+                if (copy[index].date !== undefined &&   form.edit === false) {
+                    copy[index].distance = Number(copy[index].distance) + Number(form.distance);  
+                } else {     
+                    copy[index].distance = form.distance;
+                }           
+            } else { // Нет такого (новый добавляем)
+                copy = [...distanceArr, { id: nanoid(), date: form.date, distance: form.distance, edit: 'false' }] // добавляем
+                // сортируем
+                copy.sort((a, b) => {
+                    let pastDate = conversionDate(a.date);
+                    let currentDate = conversionDate(b.date);
+                    return pastDate > currentDate ? -1 : 1;
+                })
+            } 
+                setDistance(copy); // изменяем (отрисовываем новые показатели)
+                setForms({date: '', distance: '', edit: false}); // очищаем форму
+        }
     }
 
     function onEvent({target}) {
@@ -65,15 +53,12 @@ export default function Step() {
 
         if (target.classList.contains('btn__edit')) {
             const edit = distanceArr.findIndex((el) => el.id === target.closest('.list__item').dataset.id);
-            editElem = true;
-            // elDate = distanceArr[edit].date;
-            setForms({date: distanceArr[edit].date, distance: distanceArr[edit].distance})
-            // setForms({date: elRef.distanceArr[edit].date, distance: distanceArr[edit].distance});
+            let pastDate = conversionDate(distanceArr[edit].date);
+            setForms({date: pastDate, distance: distanceArr[edit].distance, edit: 'true' });
         }
     }
 
     function handlerInput({ target }) {
-        console.log(target.dataset.name);
         setForms((items) => {
             if(target.dataset.name === 'date') {
                 return {...items, date: target.value};
@@ -97,7 +82,5 @@ export default function Step() {
             </ul>           
         </>
     )
-
-
 }
 
